@@ -1,0 +1,50 @@
+<!--
+  Copyright (c) 2015, 2017, Oracle and/or its affiliates.
+  The Universal Permissive License (UPL), Version 1.0
+-->
+<h4>input-country component v2 - view.html</h4>
+<div data-bind="attr: {id: 'country-input-container'+ $uniqueId }">
+  <oj-label data-bind="attr: {for: 'country-input'+ $uniqueId }">Country</oj-label>
+  <oj-input-text data-bind="attr: {id: 'country-input'+ $uniqueId }" value="{{$props.countryName}}" 
+  ></oj-input-text>
+  <img id="countrySelectorOpen" src="js/jet-composites/input-country/images/icon-world.png" class='iconbtnintext' title="Click to open World Map in Popup"
+  data-bind="click: openPopup" 
+  />
+</div>
+
+<div id="popupWrapper">
+    <oj-popup class="country-selection-popup" data-bind="attr: {id: 'countrySelectionPopup'+ $uniqueId }"  Xid="countrySelectionPopup" tail="none" position.my.horizontal="center" position.my.vertical="bottom" position.at.horizontal="center"
+        position.at.vertical="bottom" position.of="window" position.offset.y="-10" modality="modal" data-bind="event:{'ojAnimateStart': startAnimationListener}">
+        <div class="country-selection-popup-body">
+            <div class="country-selection-popup-header">
+                <h5>Select a country by clicking on it</h5>
+            </div>
+            <div class="country-selection-popup-content">
+                <div id="countryInfo"></div>
+                <div id="mapContainer" class="map"></div>
+                
+            </div>
+            <div class="country-selection-popup-footer">
+                <oj-button id="btnClose" data-bind="click: function()
+                            {
+                              var popup = document.querySelector('#countrySelectionPopup'+$uniqueId);
+                              popup.close();
+                            }">
+                    Close
+                </oj-button>
+            </div>
+        </div>
+    </oj-popup>
+</div>
+
+<!--
+<p data-bind="text:messageText">tet</p>
+<h3 data-bind="text: $props.countryName"/>
+<div id="countryInput">
+    
+            <oj-label for="country-input">Country</oj-label>
+            <oj-input-text id="country-input" value="{{selectedCountry}}" on-value-changed="[[countryChangedListener]]"
+            ></oj-input-text>
+            <img id="countrySelectorOpen" src="js/jet-composites/input-country/images/icon-world.png" class='iconbtnintext' title ="Click to open World Map in Popup" /> 
+        </div>
+      -->

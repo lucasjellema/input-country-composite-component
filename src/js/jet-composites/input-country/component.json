@@ -1,0 +1,19 @@
+{
+  "name": "input-country",
+  "displayName": "input-country",
+  "description": "Describe your component here",
+  "version": "1.0.0",
+  "jetVersion": "^4.1.0",
+  "properties": { 
+    "countryName": {
+      "type": "string",
+      "writeback": true
+    },
+    "countrySelectionHandler": {
+      "type": "function(string,string):boolean"
+    }
+  },
+  "methods": {},
+  "events": {},
+  "slots": {}
+}
