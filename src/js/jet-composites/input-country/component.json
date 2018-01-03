@@ -14,6 +14,16 @@
     }
   },
   "methods": {},
-  "events": {},
+  "events" : {
+    "countrySelected" : {
+      "description" : "The event that consuming views can use to recognize when a country has been selected",
+      "bubbles" : true,
+      "cancelable" : false,
+      "detail" : {
+        "countryName" : {"type" : "string"}
+        ,"countryCode" : {"type" : "string"}
+      }
+    }
+  },
   "slots": {}
 }

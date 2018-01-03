@@ -14,14 +14,14 @@ define(
             // see https://blogs.oracle.com/groundside/jet-composite-components-xvii-beware-the-ids for reference 
             self.unique = context.unique;
             self.composite = context.element;
+            self.countrySelection = {};
 
             context.props.then(function (propertyMap) {
                 //Store a reference to the properties for any later use
                 self.properties = propertyMap;
                 //Parse your component properties here 
                 self.selectedCountry = self.properties['countryName'];
-//                self.selectedCountry = ko.observable(self.properties['countryName']);
-                self.callbackHandler = self.properties['countrySelectionHandler'];                
+                self.callbackHandler = self.properties['countrySelectionHandler'];
             });
 
             self.popupOpenCount = 0;
@@ -33,10 +33,34 @@ define(
                 // note: as soon as the vector has finished loading, a listener fires () and sets the currently selected country ; see var listenerKey in function initMap();
                 if (self.popupOpenCount > 0) {
                     self.selectInteraction.getFeatures().clear();
-                    self.setSelectedCountry (self.properties['countryName'])
-//                    self.setSelectedCountry(self.selectedCountry())
+                    self.setSelectedCountry(self.properties['countryName'])
                 }
                 self.popupOpenCount++;
+            }
+
+            self.save = function () {
+                // set selected country name on the observable
+                self.properties['countryName'] = self.countrySelection.name;
+                // notify the world about this change
+                if (self.callbackHandler) { self.callbackHandler(self.countrySelection.name, self.countrySelection.code) }
+                // report the country selection
+                self.raiseCountrySelectedEvent(self.countrySelection.name, self.countrySelection.code);
+                // close popup
+                $('#countrySelectionPopup' + self.unique).ojPopup("close");
+            }
+
+            self.raiseCountrySelectedEvent = function (countryName, countryCode) {
+                var eventParams = {
+                    'bubbles': true,
+                    'cancelable': false,
+                    'detail': {
+                        'countryName': countryName
+                        , 'countryCode': countryCode
+                    }
+                };
+                //Raise the custom event
+                self.composite.dispatchEvent(new CustomEvent('countrySelected',
+                    eventParams));
             }
 
             self.startAnimationListener = function (data, event) {
@@ -93,14 +117,8 @@ define(
                 var selectedFeature = f.getArray()[f.getLength() - 1]
                 self.selectInteraction.getFeatures().clear();
                 self.selectInteraction.getFeatures().push(selectedFeature);
-                var selectedCountry = { "code": selectedFeature.id_, "name": selectedFeature.values_.name };
-                // set selected country name on the observable
-//                self.selectedCountry(self.properties['countryName']);
-                self.properties['countryName']= selectedCountry.name;
-                // notify the world about this change
-                if (self.callbackHandler) { self.callbackHandler(selectedCountry.name, selectedCountry.code)}
-  //              self.selectedCountry.valueHasMutated();   
-            });
+                self.countrySelection = { "code": selectedFeature.id_, "name": selectedFeature.values_.name };
+           });
 
 
 
@@ -125,12 +143,11 @@ define(
                 // register a listener on the vector; as soon as it has loaded, we can select the feature for the currently selected country
                 var listenerKey = self.countriesVector.on('change', function (e) {
                     if (self.countriesVector.getState() == 'ready') {
-                        console.log("loading dione");
                         // and unregister the "change" listener 
                         ol.Observable.unByKey(listenerKey);
-                        
+
                         self.setSelectedCountry(self.properties['countryName'])
-//                        self.setSelectedCountry(self.selectedCountry())
+                        //                        self.setSelectedCountry(self.selectedCountry())
                     }
                 });
                 self.map = new ol.Map({
@@ -157,6 +174,19 @@ define(
                 });
                 self.map.getInteractions().extend([self.selectInteraction]);
 
+                self.map.on('singleclick', function (evt) {
+                    var feature = self.map.forEachFeatureAtPixel(evt.pixel,
+                        function (feature, layer) {
+                            // do stuff here with feature
+                            var clickCountrySelection = { "code": feature.id_, "name": feature.values_.name };
+                            if (self.countrySelection && self.countrySelection.name && (self.countrySelection.name == clickCountrySelection.name)) {
+                                // the current selection is confirmed. We interpret this as: Save the selected country and close the popup  
+                                self.save();
+                                return;
+                            }
+                            return [feature, layer];
+                        });
+                });
 
                 // layer to hold (and highlight) currently selected feature(s) 
                 var featureOverlay = new ol.layer.Vector({

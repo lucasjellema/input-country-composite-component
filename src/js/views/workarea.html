@@ -1,6 +1,7 @@
 <h2>Workarea with Composite Component - v3</h2>
 <div>
-    <input-country country-name="{{country}}" country-selection-handler={{handleCountrySelection}} />
+    <input-country country-name="{{country}}" country-selection-handler={{handleCountrySelection}} 
+    data-bind="event : {'countrySelectedXX' : countrySelectedHandler}" on-country-selected={{countrySelectedHandler}}  />
 </div>
 <h2 data-bind="text: upperCountry"></h2>
 <div>
