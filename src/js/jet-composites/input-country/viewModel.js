@@ -20,24 +20,27 @@ define(
                 //Store a reference to the properties for any later use
                 self.properties = propertyMap;
                 //Parse your component properties here 
-                self.selectedCountry = self.properties['countryName'];
+
+                // property countrySelectionHandler may contain a function to be called when a country has been selected by the user
                 self.callbackHandler = self.properties['countrySelectionHandler'];
             });
 
-            self.popupOpenCount = 0;
+            self.popupFirstTime = true;
             self.openPopup = function () {
                 $('#countrySelectionPopup' + self.unique).ojPopup("open");
                 // if the map has not yet been initialized, then do the initialization now (this is the case the first time the popup opens)
                 if (!self.map) initMap();
                 // set the currently selected country - but only if this is not the first time the popup opens (and we can be sure that the country vector has been loaded)
                 // note: as soon as the vector has finished loading, a listener fires () and sets the currently selected country ; see var listenerKey in function initMap();
-                if (self.popupOpenCount > 0) {
+                if (!self.popupFirstTime) {
                     self.selectInteraction.getFeatures().clear();
                     self.setSelectedCountry(self.properties['countryName'])
-                }
-                self.popupOpenCount++;
-            }
+                } else 
+                    self.popupFirstTime=false;
+            }//openPopup
 
+            // this function writes the selected country name to the two way bound countryName property, calls the callback function and publishes the countrySelected event
+            // (based on the currently selected country in self.countrySelection)
             self.save = function () {
                 // set selected country name on the observable
                 self.properties['countryName'] = self.countrySelection.name;
@@ -47,7 +50,7 @@ define(
                 self.raiseCountrySelectedEvent(self.countrySelection.name, self.countrySelection.code);
                 // close popup
                 $('#countrySelectionPopup' + self.unique).ojPopup("close");
-            }
+            }//save
 
             self.raiseCountrySelectedEvent = function (countryName, countryCode) {
                 var eventParams = {
@@ -83,7 +86,7 @@ define(
             }
 
             self.setSelectedCountry = function (country) {
-                //programmatic selection of a feature
+                //programmatic selection of a feature; based on the name, a feature is searched for in countriesVector and when found is highlighted
                 var countryFeatures = self.countriesVector.getFeatures();
                 var c = self.countriesVector.getFeatures().filter(function (feature) { return feature.values_.name == country });
                 self.selectInteraction.getFeatures().push(c[0]);
@@ -147,7 +150,6 @@ define(
                         ol.Observable.unByKey(listenerKey);
 
                         self.setSelectedCountry(self.properties['countryName'])
-                        //                        self.setSelectedCountry(self.selectedCountry())
                     }
                 });
                 self.map = new ol.Map({
@@ -177,10 +179,9 @@ define(
                 self.map.on('singleclick', function (evt) {
                     var feature = self.map.forEachFeatureAtPixel(evt.pixel,
                         function (feature, layer) {
-                            // do stuff here with feature
                             var clickCountrySelection = { "code": feature.id_, "name": feature.values_.name };
                             if (self.countrySelection && self.countrySelection.name && (self.countrySelection.name == clickCountrySelection.name)) {
-                                // the current selection is confirmed. We interpret this as: Save the selected country and close the popup  
+                                // the current selection is confirmed (clicked on a second time). We interpret this as: Save the selected country and close the popup  
                                 self.save();
                                 return;
                             }
@@ -188,7 +189,7 @@ define(
                         });
                 });
 
-                // layer to hold (and highlight) currently selected feature(s) 
+                // layer to hold (and highlight) currently hovered over highlighted (not yet selected) feature(s) 
                 var featureOverlay = new ol.layer.Vector({
                     source: new ol.source.Vector(),
                     map: self.map,
@@ -204,8 +205,11 @@ define(
                 });
 
                 var highlight;
-                var displayFeatureInfo = function (pixel) {
 
+                // function to get hold of the feature under the current mouse position;
+                // the country associated with that feature is displayed in the info box
+                // the feature itself is highlighted (added to the featureOverlay defined just ovehead)
+                var displayFeatureInfo = function (pixel) {
                     var feature = self.map.forEachFeatureAtPixel(pixel, function (feature) {
                         return feature;
                     });

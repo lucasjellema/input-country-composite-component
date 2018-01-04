@@ -9,6 +9,10 @@
       "type": "string",
       "writeback": true
     },
+    "label": {
+      "type": "string",
+      "value": "Country"
+    },
     "countrySelectionHandler": {
       "type": "function(string,string):boolean"
     }
