@@ -1,5 +1,7 @@
 define(
-    ['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext', 'jet-composites/input-country/loader'],
+    ['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
+    , 'jet-composites/input-country7/loader'
+],
     function (oj, ko, $) {
         'use strict';
         function WorkareaViewModel() {

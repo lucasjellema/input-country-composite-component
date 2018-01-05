@@ -1,0 +1,26 @@
+{
+  "name": "input-country6",
+  "displayName": "input-country6",
+  "description": "Stage 6 - Input Country - Two Way Data binding",
+  "version": "1.0.0",
+  "jetVersion": "^4.1.0",
+  "properties": { 
+    "countryName": {
+      "description": "Property to hold the name of the selected country; a string can be passed in, or a data bound expression",
+      "type": "string",
+      "writeback": true
+    },
+    "label": {
+      "description": "This property is used to specify the text to be shown as the label (aka prompt) for the input field",
+      "type": "string",
+      "value": "Country"
+    },
+    "countrySelectionHandler": {
+      "description": "Provide a function to be called back whenever a country has been selected",
+      "type": "function(string,string):boolean"
+    }
+  },
+  "methods": {},
+  "events" : {},
+  "slots": {}
+}

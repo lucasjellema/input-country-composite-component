@@ -1,10 +1,11 @@
-<h2>Workarea with Composite Component - v3</h2>
+<h2>Workarea with Composite Component input-country</h2>
 <div>
-    <input-country country-name="{{country}}" country-selection-handler={{handleCountrySelection}} 
-     on-country-selected={{countrySelectedHandler}}  />
+    <input-country7 country-name="{{country}}" country-selection-handler={{handleCountrySelection}} 
+     on-country-selected={{countrySelectedHandler}}  label="Enter your country"/>
 </div>
-<h2 data-bind="text: upperCountry"></h2>
+<h4 data-bind="text: upperCountry"></h4>
 <div>
-    <input-country country-name="{{country2}}" country-selection-handler={{handleCountry2Selection}} label="Destination of Next Holiday Trip" />
+    <input-country2 country-name="{{country2}}" country-selection-handler={{handleCountry2Selection}} label="Destination of Next Holiday Trip" />
 </div>
-<h2 data-bind="text: country2"></h2>
+<h4 data-bind="text: country2"></h4>
+<br/>

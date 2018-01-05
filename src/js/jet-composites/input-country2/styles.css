@@ -1,0 +1,14 @@
+input-country2:not(.oj-complete){
+  visibility: hidden;
+}
+
+input-country2 .iconbtnintext {	
+  position:absolute;
+  cursor:pointer;
+  width:22px;
+  height:23px;
+  margin-left:-24px;
+  padding-top:4px;
+}
+
+

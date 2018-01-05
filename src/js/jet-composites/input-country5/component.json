@@ -1,0 +1,22 @@
+{
+  "name": "input-country5",
+  "displayName": "input-country5",
+  "description": "Stage 5 - Input Country - Add some richness to OpenLayers World Map",
+  "version": "1.0.0",
+  "jetVersion": "^4.1.0",
+  "properties": { 
+    "countryName": {
+      "description": "Property to hold the name of the selected country; a string can be passed in, or a data bound expression",
+      "type": "string",
+      "writeback": true
+    },
+    "label": {
+      "description": "This property is used to specify the text to be shown as the label (aka prompt) for the input field",
+      "type": "string",
+      "value": "Country"
+    }
+  },
+  "methods": {},
+  "events" : {},
+  "slots": {}
+}
