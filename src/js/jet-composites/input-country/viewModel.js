@@ -5,7 +5,7 @@
   The Universal Permissive License (UPL), Version 1.0
 */
 define(
-    ['ojs/ojcore', 'knockout', 'jquery', './libs/openlayers/ol-debug', 'css!./libs/openlayers/ol', 'ojs/ojinputtext', 'ojs/ojlabel', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $, ol) {
+    ['ojs/ojcore', 'knockout', 'jquery', 'inputCountry/ol', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $,ol) {
         'use strict';
 
         function InputCountryComponentModel(context) {
@@ -24,8 +24,8 @@ define(
                 // property countrySelectionHandler may contain a function to be called when a country has been selected by the user
                 self.callbackHandler = self.properties['countrySelectionHandler'];
             });
-
-            self.popupFirstTime = true;
+            
+            self.popupFirstTime = true;            
             self.openPopup = function () {
                 $('#countrySelectionPopup' + self.unique).ojPopup("open");
                 // if the map has not yet been initialized, then do the initialization now (this is the case the first time the popup opens)
@@ -38,33 +38,6 @@ define(
                 } else 
                     self.popupFirstTime=false;
             }//openPopup
-
-            // this function writes the selected country name to the two way bound countryName property, calls the callback function and publishes the countrySelected event
-            // (based on the currently selected country in self.countrySelection)
-            self.save = function () {
-                // set selected country name on the observable
-                self.properties['countryName'] = self.countrySelection.name;
-                // notify the world about this change
-                if (self.callbackHandler) { self.callbackHandler(self.countrySelection.name, self.countrySelection.code) }
-                // report the country selection
-                self.raiseCountrySelectedEvent(self.countrySelection.name, self.countrySelection.code);
-                // close popup
-                $('#countrySelectionPopup' + self.unique).ojPopup("close");
-            }//save
-
-            self.raiseCountrySelectedEvent = function (countryName, countryCode) {
-                var eventParams = {
-                    'bubbles': true,
-                    'cancelable': false,
-                    'detail': {
-                        'countryName': countryName
-                        , 'countryCode': countryCode
-                    }
-                };
-                //Raise the custom event
-                self.composite.dispatchEvent(new CustomEvent('countrySelected',
-                    eventParams));
-            }
 
             self.startAnimationListener = function (data, event) {
                 var ui = event.detail;
@@ -84,6 +57,33 @@ define(
                     ui.endCallback();
                 }
             }
+            
+            // this function writes the selected country name to the two way bound countryName property, calls the callback function and publishes the countrySelected event
+            // (based on the currently selected country in self.countrySelection)
+            self.save = function () {
+                // set selected country name on the observable
+                self.properties['countryName'] = self.countrySelection.name;
+                // notify the world about this change
+                if (self.callbackHandler) { self.callbackHandler(self.countrySelection.name, self.countrySelection.code) }
+                // report the country selection event
+                self.raiseCountrySelectedEvent(self.countrySelection.name, self.countrySelection.code);
+                // close popup
+                $('#countrySelectionPopup' + self.unique).ojPopup("close");
+            }//save
+
+            self.raiseCountrySelectedEvent = function (countryName, countryCode) {
+                var eventParams = {
+                    'bubbles': true,
+                    'cancelable': false,
+                    'detail': {
+                        'countryName': countryName
+                        , 'countryCode': countryCode
+                    }
+                };
+                //Raise the custom event
+                self.composite.dispatchEvent(new CustomEvent('countrySelected',
+                    eventParams));
+            }
 
             self.setSelectedCountry = function (country) {
                 //programmatic selection of a feature; based on the name, a feature is searched for in countriesVector and when found is highlighted
@@ -91,38 +91,6 @@ define(
                 var c = self.countriesVector.getFeatures().filter(function (feature) { return feature.values_.name == country });
                 self.selectInteraction.getFeatures().push(c[0]);
             }
-
-
-            // define the style to apply to selected countries
-            var selectCountryStyle = new ol.style.Style({
-                stroke: new ol.style.Stroke({
-                    color: '#ff0000',
-                    width: 2
-                })
-                , fill: new ol.style.Fill({
-                    color: 'red'
-                })
-            });
-            self.selectInteraction = new ol.interaction.Select({
-                condition: ol.events.condition.singleClick,
-                toggleCondition: ol.events.condition.shiftKeyOnly,
-                layers: function (layer) {
-                    return layer.get('id') == 'countries';
-                },
-                style: selectCountryStyle
-
-            });
-            // add an event handler to the interaction
-            self.selectInteraction.on('select', function (e) {
-                //to ensure only a single country can be selected at any given time
-                // find the most recently selected feature, clear the set of selected features and add the selected the feature (as the only one)
-                var f = self.selectInteraction.getFeatures()
-                var selectedFeature = f.getArray()[f.getLength() - 1]
-                self.selectInteraction.getFeatures().clear();
-                self.selectInteraction.getFeatures().push(selectedFeature);
-                self.countrySelection = { "code": selectedFeature.id_, "name": selectedFeature.values_.name };
-           });
-
 
 
             function initMap() {
@@ -142,16 +110,15 @@ define(
                     format: new ol.format.GeoJSON()
                 });
 
-
                 // register a listener on the vector; as soon as it has loaded, we can select the feature for the currently selected country
                 var listenerKey = self.countriesVector.on('change', function (e) {
                     if (self.countriesVector.getState() == 'ready') {
                         // and unregister the "change" listener 
                         ol.Observable.unByKey(listenerKey);
-
                         self.setSelectedCountry(self.properties['countryName'])
                     }
                 });
+
                 self.map = new ol.Map({
                     layers: [
                         new ol.layer.Vector({
@@ -174,21 +141,40 @@ define(
                         zoom: 2
                     })
                 });
-                self.map.getInteractions().extend([self.selectInteraction]);
 
-                self.map.on('singleclick', function (evt) {
-                    var feature = self.map.forEachFeatureAtPixel(evt.pixel,
-                        function (feature, layer) {
-                            var clickCountrySelection = { "code": feature.id_, "name": feature.values_.name };
-                            if (self.countrySelection && self.countrySelection.name && (self.countrySelection.name == clickCountrySelection.name)) {
-                                // the current selection is confirmed (clicked on a second time). We interpret this as: Save the selected country and close the popup  
-                                self.save();
-                                return;
-                            }
-                            return [feature, layer];
-                        });
+
+                // define the style to apply to selected countries
+                var selectCountryStyle = new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: '#ff0000',
+                        width: 2
+                    })
+                    , fill: new ol.style.Fill({
+                        color: 'red'
+                    })
+                });
+                self.selectInteraction = new ol.interaction.Select({
+                    condition: ol.events.condition.singleClick,
+                    toggleCondition: ol.events.condition.shiftKeyOnly,
+                    layers: function (layer) {
+                        return layer.get('id') == 'countries';
+                    },
+                    style: selectCountryStyle
+
                 });
 
+                self.map.getInteractions().extend([self.selectInteraction]);
+
+                // add an event handler to the interaction
+                self.selectInteraction.on('select', function (e) {
+                    //to ensure only a single country can be selected at any given time
+                    // find the most recently selected feature, clear the set of selected features and add the selected the feature (as the only one)
+                    var f = self.selectInteraction.getFeatures()
+                    var selectedFeature = f.getArray()[f.getLength() - 1]
+                    self.selectInteraction.getFeatures().clear();
+                    self.selectInteraction.getFeatures().push(selectedFeature);
+                    self.countrySelection = { "code": selectedFeature.id_, "name": selectedFeature.values_.name };
+                });
                 // layer to hold (and highlight) currently hovered over highlighted (not yet selected) feature(s) 
                 var featureOverlay = new ol.layer.Vector({
                     source: new ol.source.Vector(),
@@ -241,9 +227,22 @@ define(
                     displayFeatureInfo(pixel);
                 });
 
+                // handle the singleclick event- in case a country is clicked that is already selected
+                self.map.on('singleclick', function (evt) {
+                    var feature = self.map.forEachFeatureAtPixel(evt.pixel,
+                        function (feature, layer) {
+                            var clickCountrySelection = { "code": feature.id_, "name": feature.values_.name };
+                            if (self.countrySelection && self.countrySelection.name && (self.countrySelection.name == clickCountrySelection.name)) {
+                                // the current selection is confirmed (clicked on a second time). We interpret this as: Save the selected country and close the popup  
+                                self.save();
+                                return;
+                            }
+                            return [feature, layer];
+                        });
+                });
+
 
             }//initMap
-
         };
 
         //Lifecycle methods - uncomment and implement if necessary 
