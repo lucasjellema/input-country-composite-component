@@ -1,3 +1,11 @@
+requirejs.config(
+    {
+      // create path mapping for input-country module
+      paths:
+      {
+        'input-country':'jet-composites/input-country'
+      }
+    });
 define(
     ['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
     , 'input-country/loader'
