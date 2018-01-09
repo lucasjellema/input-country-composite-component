@@ -5,7 +5,7 @@
 <div data-bind="attr: {id: 'country-input-container'+ $uniqueId }">
     <oj-label data-bind="attr: {for: 'country-input'+ $uniqueId }" ><span data-bind="text: $props.label"></span></span></oj-label>
     <oj-input-text data-bind="attr: {id: 'country-input'+ $uniqueId }" value="{{$props.countryName}}"></oj-input-text>
-    <img id="countrySelectorOpen" src="js/jet-composites/input-country/images/icon-world.png" class='iconbtnintext' title="Click to open World Map in Popup"
+    <img id="countrySelectorOpen" :src='[[require.toUrl("input-country/images/icon-world.png")]]' class='iconbtnintext' title="Click to open World Map in Popup"
         data-bind="click: openPopup" />
 </div>
 

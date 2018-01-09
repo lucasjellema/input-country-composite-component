@@ -106,7 +106,7 @@ define(
                 }); //style
 
                 self.countriesVector = new ol.source.Vector({
-                    url: 'js/jet-composites/input-country/countries.geo.json',
+                    url: require.toUrl('input-country/countries.geo.json'),
                     format: new ol.format.GeoJSON()
                 });
 
