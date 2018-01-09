@@ -1,6 +1,6 @@
 define(
     ['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
-    , 'jet-composites/input-country/loader'
+    , 'input-country/loader'
 ],
     function (oj, ko, $) {
         'use strict';
