@@ -3,33 +3,36 @@
   The Universal Permissive License (UPL), Version 1.0
 -->
 <h2>Stage 3 - Input Country - Open Popup when Icon is clicked</h2>
-<div data-bind="attr: {id: 'country-input-container'+ $uniqueId }">
-    <oj-label data-bind="attr: {for: 'country-input'+ $uniqueId }" ><span data-bind="text: $props.label"></span></span></oj-label>
-    <oj-input-text data-bind="attr: {id: 'country-input'+ $uniqueId }" value="{{$props.countryName}}"></oj-input-text>
-    <img id="countrySelectorOpen" src="js/jet-composites/input-country3/images/icon-world.png" class='iconbtnintext' title="Click to open World Map in Popup"
-    data-bind="click: openPopup"/>
+<div :id="[['country-input-container'+ $uniqueId]]">
+  <oj-label data-bind="attr: {for: 'country-input'+ $uniqueId }">
+    <span data-bind="text: $props.label"></span>
+    </span>
+  </oj-label>
+  <oj-input-text :id="[['country-input'+ $uniqueId]]" value="{{$props.countryName}}"></oj-input-text>
+  <img :id="[['countrySelectorOpen'+ $uniqueId]]" :src='[[require.toUrl("input-country/images/icon-world.png")]]' class='iconbtnintext'
+    title="Click to open World Map in Popup" data-bind="click: openPopup" />
 </div>
 <div id="popupWrapper">
-  <oj-popup class="country-selection-popup" data-bind="attr: {id: 'countrySelectionPopup'+ $uniqueId }" 
-      tail="none" position.my.horizontal="center" position.my.vertical="bottom" position.at.horizontal="center" position.at.vertical="bottom"
-      position.of="window" position.offset.y="-10" modality="modal" data-bind="event:{'ojAnimateStart': startAnimationListener}">
-      <div class="country-selection-popup-body">
-          <div class="country-selection-popup-header">
-              <h5>Select a country by clicking on it</h5>
-          </div>
-          <div class="country-selection-popup-content">
-          </div>
-          <div class="country-selection-popup-footer">
-              <oj-button id="btnClose" data-bind="click: function()
+  <oj-popup class="input-country-country-selection-popup" :id="[['countrySelectionPopup'+ $uniqueId ]]" tail="none" position.my.horizontal="center"
+    position.my.vertical="bottom" position.at.horizontal="center" position.at.vertical="bottom" position.of="window" position.offset.y="-10"
+    modality="modal" data-bind="event:{'ojAnimateStart': startAnimationListener}">
+    <div class="input-country-country-selection-popup-body">
+      <div class="input-country-country-selection-popup-header">
+        <h5>Select a country by clicking on it</h5>
+      </div>
+      <div class="input-country-country-selection-popup-content">
+        <div :id="[['countryInfo'+ $uniqueId ]]"></div>
+        <div :id="[['mapContainer'+ $uniqueId ]]"></div>
+      </div>
+      <div class="input-country-country-selection-popup-footer">
+        <oj-button :id="[['btnClose'+ $uniqueId ]]" data-bind="click: function()
   {
     var popup = document.querySelector('#countrySelectionPopup'+$uniqueId);
     popup.close();
   }">
-                  Cancel
-              </oj-button>
-          </div>
+          Cancel
+        </oj-button>
       </div>
+    </div>
   </oj-popup>
 </div>
-
-

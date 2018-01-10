@@ -3,11 +3,12 @@
   The Universal Permissive License (UPL), Version 1.0
 -->
 <h2>Stage 2 - Input Country - Add label, input-text, image, some styling and a label property</h2>
-<div data-bind="attr: {id: 'country-input-container'+ $uniqueId }">
-    <oj-label data-bind="attr: {for: 'country-input'+ $uniqueId }" ><span data-bind="text: $props.label"></span></span></oj-label>
-    <oj-input-text data-bind="attr: {id: 'country-input'+ $uniqueId }" value="{{$props.countryName}}"></oj-input-text>
-    <img id="countrySelectorOpen" src="js/jet-composites/input-country2/images/icon-world.png" class='iconbtnintext' title="Click to open World Map in Popup"
-       />
+<div :id='[['country-input-container'+ $uniqueId]]'>
+  <oj-label data-bind="attr: {for: 'country-input'+ $uniqueId }" ><span data-bind="text: $props.label"></span></span></oj-label>
+  <oj-input-text :id="[['country-input'+ $uniqueId]]"  value="{{$props.countryName}}"></oj-input-text>
+  <img  :id="[['countrySelectorOpen'+ $uniqueId]]" :src='[[require.toUrl("input-country/images/icon-world.png")]]' class='iconbtnintext' title="Click to open World Map in Popup"
+     />
 </div>
+
 
 

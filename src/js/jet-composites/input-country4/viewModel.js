@@ -5,7 +5,7 @@
   The Universal Permissive License (UPL), Version 1.0
 */
 define(
-    ['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $) {
+    ['ojs/ojcore', 'knockout', 'jquery', 'input-country/ol', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $, ol) {
         'use strict';
 
         function InputCountryComponentModel(context) {
@@ -17,8 +17,8 @@ define(
 
             self.openPopup = function () {
                 $('#countrySelectionPopup' + self.unique).ojPopup("open");
-                 // if the map has not yet been initialized, then do the initialization now (this is the case the first time the popup opens)
-                 if (!self.map) initMap();
+                // if the map has not yet been initialized, then do the initialization now (this is the case the first time the popup opens)
+                if (!self.map) initMap();
             }//openPopup
 
             self.startAnimationListener = function (data, event) {
@@ -43,12 +43,12 @@ define(
             function initMap() {
                 self.map = new ol.Map({
                     layers: [
-                       new ol.layer.Tile({
+                        new ol.layer.Tile({
                             id: "world",
                             source: new ol.source.OSM()
                         })
                     ],
-                    target: 'mapContainer',
+                    target: 'mapContainer' + self.unique,
                     view: new ol.View({
                         center: [0, 0],
                         zoom: 2
