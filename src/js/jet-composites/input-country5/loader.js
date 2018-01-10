@@ -1,7 +1,7 @@
 requirejs.config(
   {
     paths:
-    { 'inputCountry/ol': './jet-composites/input-country5/libs/openlayers/ol-debug'
+    { 'input-country/ol': '../'+require.toUrl('input-country/libs/openlayers/ol-debug')
     }   
   }
   );
