@@ -5,7 +5,7 @@
   The Universal Permissive License (UPL), Version 1.0
 */
 define(
-    ['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $) {
+    ['ojs/ojcore', 'knockout', 'jquery',  './libs/openlayers/ol-debug', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $, ol) {
         'use strict';
 
         function InputCountryComponentModel(context) {

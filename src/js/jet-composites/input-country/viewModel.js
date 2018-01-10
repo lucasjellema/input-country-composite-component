@@ -1,5 +1,5 @@
 define(
-    ['ojs/ojcore', 'knockout', 'jquery', 'input-country/ol', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $, ol) {
+    ['ojs/ojcore', 'knockout', 'jquery',  './libs/openlayers/ol-debug', 'ojs/ojbutton', 'ojs/ojpopup'], function (oj, ko, $, ol) {
         'use strict';
 
         function InputCountryComponentModel(context) {
