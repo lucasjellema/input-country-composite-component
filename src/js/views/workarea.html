@@ -5,7 +5,7 @@
 </div>
 <h4 data-bind="text: upperCountry"></h4>
 <div>
-    <input-country country-name="{{country2}}" country-selection-handler={{handleCountry2Selection}} label="Destination of Next Holiday Trip" />
+    <input-country country-name="{{country2}}" country-selection-handler={{handleCountry2Selection}} label="Destination of Next Holiday Trip" on-country-name-changed={{handleCountryNameChangedHandler}}  />
 </div>
 <h4 data-bind="text: country2"></h4>
 <br/>

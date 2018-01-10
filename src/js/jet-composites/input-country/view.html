@@ -12,18 +12,18 @@
       title="Click to open World Map in Popup" data-bind="click: openPopup" />
   </div>
   <div id="popupWrapper">
-    <oj-popup class="input-selection-country-selection-popup" :id="[['countrySelectionPopup'+ $uniqueId ]]" tail="none" position.my.horizontal="center"
+    <oj-popup class="input-country-country-selection-popup" :id="[['countrySelectionPopup'+ $uniqueId ]]" tail="none" position.my.horizontal="center"
       position.my.vertical="bottom" position.at.horizontal="center" position.at.vertical="bottom" position.of="window" position.offset.y="-10"
       modality="modal" data-bind="event:{'ojAnimateStart': startAnimationListener}">
-      <div class="input-selection-country-selection-popup-body">
-        <div class="input-selection-country-selection-popup-header">
+      <div class="input-country-country-selection-popup-body">
+        <div class="input-country-country-selection-popup-header">
           <h5>Select a country by clicking on it</h5>
         </div>
-        <div class="input-selection-country-selection-popup-content">
+        <div class="input-country-country-selection-popup-content">
           <div :id="[['countryInfo'+ $uniqueId ]]"></div>
           <div :id="[['mapContainer'+ $uniqueId ]]"></div>
         </div>
-        <div class="input-selection-country-selection-popup-footer">
+        <div class="input-country-country-selection-popup-footer">
           <oj-button :id="[['btnSave'+ $uniqueId ]]" data-bind="click: save">
             Save
           </oj-button>

@@ -25,17 +25,21 @@ define(
 
             // function to be called back from input-country component
             self.handleCountrySelection= function (selectedCountryName, selectedCountryCode) {
-                console.log(`Callback Function to Handle Country Selection name ${selectedCountryName} and code ${selectedCountryCode}`);
+                console.log('Callback Function to Handle Country Selection name '+ selectedCountryName+ ' and code '+ selectedCountryCode);
             }
 
             // function to be called back from input-country component
             self.handleCountry2Selection= function (selectedCountryName, selectedCountryCode) {
-                console.log(`Callback Function to Handle Country 2 Selection name ${selectedCountryName} and code ${selectedCountryCode}`);
+                console.log('Callback Function to Handle Country Selection name '+ selectedCountryName+ ' and code '+ selectedCountryCode);
             }
 
             // function to handle the countrySelected event that can be published by the input-country component
             self.countrySelectedHandler = function(countrySelectedEvent) {
-                console.log("countrySelectedHandler - to handle countrySelected event "+JSON.stringify(countrySelectedEvent.detail))
+                console.log("countrySelectedHandler - to handle custom countrySelected event "+JSON.stringify(countrySelectedEvent.detail))
+            }
+
+            self.handleCountryNameChangedHandler = function(countryNameChangedEvent) {
+                console.log("handleCountryNameChangedHandler - to handle out-of-the-box countryNameChanged event "+JSON.stringify(countryNameChangedEvent.detail))
             }
 
             }
